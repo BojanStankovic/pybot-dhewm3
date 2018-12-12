@@ -31,7 +31,7 @@ from botutils import *
 from socket import *
 
 superServer = 7000
-debug_protocol = True
+debug_protocol = False
 debug_turn = False
 
 
@@ -111,7 +111,7 @@ class basic:
                 success, s = self.tryConnectSS (server, superServer+j)
                 if success:
                     superServer = superServer+j
-                    print "bot connected to supersFalseerver on port", superServer
+                    print "bot connected to superserver on port", superServer
                     return s
             sys.stdout.write (".")
             sys.stdout.flush ()

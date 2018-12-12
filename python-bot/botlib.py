@@ -344,7 +344,7 @@ class bot:
         self.reset ()
 
 
-    def calcMidDist (self, dest):
+    def calcMidDist (dest):
         botpos = self.getpos (self.me ())  # doom3 units
 
 
