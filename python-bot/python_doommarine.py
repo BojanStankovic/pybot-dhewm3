@@ -7,7 +7,6 @@ import math
 
 debugTowards = False
 
-
 def walkSquare ():
     b.forward (100, 100)
     b.select (["move"])
@@ -19,22 +18,30 @@ def walkSquare ():
     b.select (["move"])
 
 
-def runArc (a):
-    b.forward (100, 100)
+def moveInArc (a, velocity, distance):
+    b.forward (velocity, distance)
     b.turn (a, 1)
+    b.left (velocity, distance)
     b.select (["move"])
+    b.select (["turn"])
     b.select (["turn"])
 
 
-def circle ():
+def circle (velocity, distance):
     while True:
         for a in range (0, 360, 45):
-            runArc (a+180)
-        time.sleep (5)
+            moveInArc (a+180, velocity, distance)
+        # time.sleep (5)
         for w in range (0, 10):
             print "attempting to change to weapon", w,
-            print "dhewm3 returns", b.changeWeapon (w)
-            time.sleep (3)
+            # print "dhewm3 returns", b.changeWeapon (w)
+            # time.sleep (3)
+
+def runCircle ():
+    circle (100, 100)
+
+def walkCircle ():
+    circle (10, 10)
 
 def testturn (a):
     b.turn (a, 1)
@@ -146,10 +153,11 @@ def botMain (b):
     you = findYou (b)
 
     while True:
-        moveTowards (you)
-        b.face (you)
+        # moveTowards (you)
+        # b.face (you)
         # b.fire ()
-        time.sleep (3)
+        # time.sleep (3)
+        walkCircle ()
 
 
 
@@ -157,4 +165,4 @@ if len (sys.argv) > 1:
     doommarine = int (sys.argv[1])
 
 b = botlib.bot ("localhost", "python_doommarine %d" % (doommarine))
-execBot (b)
+execBot (b, False)

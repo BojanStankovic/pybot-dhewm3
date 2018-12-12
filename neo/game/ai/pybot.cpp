@@ -119,6 +119,7 @@ class item
   item (const item &from);
   item (const char *n, idAI *idBot, int id);
   item (const char *n, idPlayer *ip, int id);
+
   idVec3 getPos (void);
   bool stepDirection (float dir);
   int stepForward (int vel, int dist);
@@ -781,6 +782,7 @@ int define (const char *name, idPlayer *ip, int instance)
 }
 
 
+# define section pyList
 class pyList
 {
 public:
