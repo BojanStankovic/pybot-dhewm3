@@ -782,7 +782,6 @@ int define (const char *name, idPlayer *ip, int instance)
 }
 
 
-# define section pyList
 class pyList
 {
 public:
