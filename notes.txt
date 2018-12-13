@@ -1,9 +1,21 @@
 Implemented so far:
-- changing weapons
-- firing
-- health updating
+- (2) changing weapons
+- (2) firing
+- (2) health updating
+- (1) auto lights - maybe change this a bit
+
 
 
 
 Observations:
 - in order to have effective firing, there has to be a delay after calling the fire method to allow the animation to finish
+
+
+
+
+TODO:
+- refactor and comment the methods I touched (especially the lights)
+- reference the introduce lights to Gaius' github
+- get the bot find the aid pack and pick it up
+- fix the beams
+- reload weapons
