@@ -1,0 +1,9 @@
+Implemented so far:
+- changing weapons
+- firing
+- health updating
+
+
+
+Observations:
+- in order to have effective firing, there has to be a delay after calling the fire method to allow the animation to finish

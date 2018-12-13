@@ -378,7 +378,7 @@ class basic:
     #                It returns the amount of ammo left.
     #
 
-    def startFiring (self):
+    def start_firing (self):
         if debug_protocol:
             print "requesting to fire weapon"
         self.s.send ("start_firing\n")
@@ -393,7 +393,7 @@ class basic:
     #                It returns the amount of ammo left.
     #
 
-    def stopFiring (self):
+    def stop_firing (self):
         if debug_protocol:
             print "requesting to stop firing weapon"
         self.s.send ("stop_firing\n")
@@ -418,7 +418,7 @@ class basic:
         return int (l)
 
     #
-    #  changeWeapon - change to weapon, n.
+    #  change_weapon - change to weapon, n.
     #                 Attempt to change to weapon, n.
     #                 n is a number 0..maxweapon
     #                 The return value is the amount
@@ -428,15 +428,31 @@ class basic:
     #                 the bots inventory.
     #
 
-    def changeWeapon (self, n):
+    def change_weapon (self, weapon):
         if debug_protocol:
-            print "requesting change weapon to", n
-        s = "change_weapon %d\n" % (n)
-        self.s.send (s)
-        l = self.getLine ()
+            print "requesting change weapon to", weapon
+        string = "change_weapon %d\n" % (weapon)
+        self.s.send (string)
+        line = self.getLine ()
         if debug_protocol:
-            print "doom returned", l
-        return int (l)
+            print "doom returned", line
+        return int (line)
+
+
+    #
+    #  get_health - return current health.
+    #
+
+    def get_health (self):
+        if debug_protocol:
+            print "get me current helth", weapon
+        string = "health\n"
+        self.s.send (string)
+        line = self.getLine ()
+        if debug_protocol:
+            print "health returned", line
+        return int (line)
+
 
 
     #

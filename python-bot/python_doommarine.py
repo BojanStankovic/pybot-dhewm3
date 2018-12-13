@@ -145,10 +145,27 @@ def botMain (b):
     you = findYou (b)
 
     while True:
-        moveTowards (you)
-        b.face (you)
-        # b.fire ()
-        time.sleep (3)
+        # moveTowards (you)
+        # b.face (you)
+        print b.get_health ()
+        b.change_weapon (3)
+        print "changed to 3"
+        time.sleep (2)
+        b.start_firing ()
+        time.sleep (2)
+        print "fired"
+        # b.change_weapon (0)
+        # time.sleep (10)
+        b.change_weapon (1)
+        print "changed to 1"
+        b.start_firing ()
+        print "fired"
+        # time.sleep (10)
+        # b.change_weapon (3)
+        time.sleep (2)
+        b.stop_firing ()
+        print "stopped firing"
+        time.sleep (2)
 
 
 
@@ -156,4 +173,4 @@ if len (sys.argv) > 1:
     doommarine = int (sys.argv[1])
 
 b = botlib.bot ("localhost", "python_doommarine %d" % (doommarine))
-execBot (b)
+execBot (b, False)

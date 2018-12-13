@@ -77,6 +77,25 @@ class cache:
         return self._dict[l]
 
     #
+    #  change_weapon - return weapon type.
+    #
+
+    def change_weapon (self, weapon_obj):
+        # line = 'getweapon_%d' % (weapon_obj)
+        # if not self._dict.has_key (line):
+        #     self._dict[line] = self._basic.getpos (weapon_obj)
+        return self._basic.change_weapon (weapon_obj)
+
+
+    #
+    #  get_health - return current health.
+    #
+
+    def get_health (self):
+        return self._basic.get_health ()
+
+
+    #
     #  me - return the bots entity, id.
     #
 
@@ -188,8 +207,8 @@ class cache:
     #
 
     def select (self, l):
-        return self._basic.select (l)
         self.delpos (self.me ())
+        return self._basic.select (l)
 
     #
     #  start_firing - fire weapon

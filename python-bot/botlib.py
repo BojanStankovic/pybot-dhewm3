@@ -117,6 +117,22 @@ class bot:
         p = self._cache.getpos (obj)
         return [p[0], p[1], p[2]]
 
+
+    #
+    #  change_weapon - return weapon type.
+    #
+
+    def change_weapon (self, weapon_obj):
+        return self._cache.change_weapon (weapon_obj)
+
+
+    #
+    #  get_health - return current health.
+    #
+
+    def get_health (self):
+        return self._cache.get_health ()
+
     #
     #  forward - step forward at velocity, vel, for dist, units.
     #
@@ -167,6 +183,22 @@ class bot:
 
     def select (self, l):
         return self._cache.select (l)
+
+    #
+    #  start_firing - fire weapon
+    #                 It returns the amount of ammo left.
+    #
+
+    def start_firing (self):
+        return self._cache.start_firing ()
+
+    #
+    #  stop_firing - stop firing weapon
+    #                It returns the amount of ammo left.
+    #
+
+    def stop_firing (self):
+        return self._cache.stop_firing ()
 
     #
     #  sync - wait for any event to occur.
