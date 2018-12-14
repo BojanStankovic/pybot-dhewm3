@@ -6403,6 +6403,8 @@ void idPlayer::Think( void ) {
 		    buttonMask &= (~ BUTTON_RUN);
 		    usercmd.rightmove = 0;
 		    usercmd.forwardmove = 0;
+			usercmd.upmove = 0;
+   			gameLocal.usercmds[entityNumber].upmove = 0;
 		    gameLocal.usercmds[entityNumber].rightmove = 0;
 		    gameLocal.usercmds[entityNumber].forwardmove = 0;
 		    gameLocal.usercmds[entityNumber].buttons = 0;
@@ -6822,6 +6824,29 @@ int idPlayer::Ammo (void)
   if (currentWeapon >= 0 && currentWeapon < MAX_WEAPONS)
     return inventory.ammo[currentWeapon];
   return 0;
+}
+
+
+/*
+=============
+idPlayer::stepUp  (crouch or jump)
+=============
+ */
+int idPlayer::stepUp (int vel, int dist)
+{
+  int old = (int) usercmd.upmove;
+
+  // gameLocal.Printf( "stepUp %d %d0, vel, dist );
+  usercmd.upmove = (signed char) vel;
+  usercmd.forwardmove = 0;
+  usercmd.rightmove = 0;
+  buttonMask = 0;
+  buttonMask |= BUTTON_RUN;
+  pulseCount.set_run (dist);
+  usercmd.buttons |= BUTTON_RUN;
+  gameLocal.usercmds[entityNumber] = usercmd;
+
+  return old;
 }
 
 

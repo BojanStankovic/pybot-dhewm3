@@ -114,6 +114,7 @@ class pyBotClass
   void rpcRight (char *data);
   void rpcForward (char *data);
   void rpcStepVec (char *data);
+  void rpcStepUp (char *data);
   void rpcAim (char *data);
   void rpcStartFiring (void);
   void rpcStopFiring (void);

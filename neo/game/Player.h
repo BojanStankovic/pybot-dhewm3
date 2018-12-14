@@ -588,7 +588,8 @@ public:
 	bool isVisible (idEntity *enemy);  // gaius
 	int Fire (bool firing);   // gaius
 	int Ammo (void);  // gaius
-        int Turn (int angle, int angle_vel);   // gaius
+	int stepUp (int vel, int dist);
+    int Turn (int angle, int angle_vel);   // gaius
 	int GetYaw (void);  // gaius
 	void doTurn (int angle);	// gaius
 	void select (int bitmask);  // gaius

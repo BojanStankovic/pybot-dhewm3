@@ -330,6 +330,19 @@ class basic:
             print "doom returned", l
         return int (l)
 
+    #
+    #  stepup - makes the bot jump or crouch
+    #
+
+    def stepup (self, velocity, dist):
+        l = "step_up %d %d\n" % (velocity, dist)
+        if debug_protocol:
+            print "requesting a", l
+        self.s.send (l)
+        l = self.getLine ()
+        if debug_protocol:
+            print "doom returned", l
+        return int (l)
 
     #
     #  sync - wait for one event to finish.

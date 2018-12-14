@@ -160,6 +160,13 @@ class bot:
 
     def right (self, vel, dist):
         return self._cache.right (vel, dist)
+    
+    #
+    #  stepup - makes the bot jump or crouch.
+    #
+
+    def stepup (self, velup, dist):
+        return self._cache.stepup (velup, dist)
 
     #
     #  atod3 - convert a penguin tower map angle into the doom3 angle.

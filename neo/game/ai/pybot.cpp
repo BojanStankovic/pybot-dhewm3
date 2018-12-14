@@ -125,6 +125,7 @@ class item
   int stepForward (int vel, int dist);
   int stepRight (int vel, int dist);
   int stepVec (int velforward, int velright, int dist);
+  int stepUp (int vel, int dist);
   int start_firing (void);
   int stop_firing (void);
   int ammo (void);
@@ -291,6 +292,27 @@ int item::stepVec (int velforward, int velright, int dist)
     case item_player:
       return idplayer->setVec (velforward, velright, dist);
     }
+  return 0;
+}
+
+
+/*
+ *  stepUp - jump/crouch.
+ */
+
+int item::stepUp (int vel, int dist)
+{
+  switch (kind)
+  {
+#if 0
+  case item_monster:
+    return idai->Turn (angle, angle_vel);
+#endif
+  case item_player:
+    return idplayer->stepUp (vel, dist);
+  }
+
+  assert (false);
   return 0;
 }
 
@@ -516,6 +538,7 @@ class dict
   int stop_firing (int id);
   int reload_weapon (int id);
   int ammo (int id);
+  int stepUp (int id, int vel, int dist);
   int health (int id);
   int angle (int id);
   bool aim (int id, int enemy);
@@ -683,6 +706,16 @@ int dict::stop_firing (int id)
 int dict::ammo (int id)
 {
   return entry[id]->ammo ();
+}
+
+
+/*
+ *  stepUp - jump or crouch.
+ */
+
+int dict::stepUp (int id, int vel, int dist)
+{
+  return entry[id]->stepUp (vel, dist);
 }
 
 
@@ -1670,6 +1703,8 @@ void pyBotClass::interpretRemoteProcedureCall (char *data)
     rpcForward (&data[8]);
   else if (idStr::Cmpn (data, "stepvec ", 8) == 0)
     rpcStepVec (&data[8]);
+  else if (idStr::Cmpn (data, "step_up ", 8) == 0)
+    rpcStepUp (&data[8]);
   else if (strcmp (data, "start_firing") == 0)
     rpcStartFiring ();
   else if (strcmp (data, "stop_firing") == 0)
@@ -1906,21 +1941,52 @@ void pyBotClass::rpcStepVec (char *data)
     gameLocal.Printf ("rpcStepVec (%s) call by python\n", data);
 
   if (rpcId > 0)
+  {
+    velforward = atoi (data);
+    char *p = index (data, ' ');
+    if ((p == NULL) || ((*p) == '\0'))
+      velright = 0;
+    else
     {
-      velforward = atoi (data);
+      velright = atoi (p);
       char *p = index (data, ' ');
       if ((p == NULL) || ((*p) == '\0'))
-	velright = 0;
-      else
-	{
-	  velright = atoi (p);
-	  char *p = index (data, ' ');
-	  if ((p == NULL) || ((*p) == '\0'))
-	    dist = atoi (p);
-	}
-      dist = dictionary->stepVec (rpcId, velforward, velright, dist);
+        dist = atoi (p);
     }
+    dist = dictionary->stepVec (rpcId, velforward, velright, dist);
+  }
   idStr::snPrintf (buf, sizeof (buf), "%d\n", dist);
+  buffer.pyput (buf);
+  state = toWrite;
+}
+
+
+/*
+ *  rpcStepUp - return the amount of ammo available for the current weapon
+ *                    after reloading.
+ */
+
+void pyBotClass::rpcStepUp (char *data)
+{
+  char buf[1024];
+  int vel = 0;
+  int dist = 0;
+
+  if (protocol_debugging)
+    gameLocal.Printf ("rpcStepUp (%s) call by python\n", data);
+
+  if (rpcId > 0)
+  {
+    vel = atoi (data);
+    char *p = index (data, ' ');
+    if ((p == NULL) || ((*p) == '\0'))
+      dist = 0;
+    else
+      dist = atoi (p);
+    vel = dictionary->stepUp (rpcId, vel, dist);
+  }
+
+  idStr::snPrintf (buf, sizeof (buf), "%d\n", vel);
   buffer.pyput (buf);
   state = toWrite;
 }

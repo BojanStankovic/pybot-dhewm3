@@ -121,6 +121,15 @@ def clock (b):
         b.reset ()
 
 
+def test_crouch_jump (b):
+    b.reset ()
+    b.stepup (-2, 3*12)
+    b.select (['move'])
+    time.sleep (2)
+    b.stepup (100, 4*12)
+    b.select (['move'])
+
+
 doommarine = -2
 
 def execBot (b, useExceptions = True):
@@ -144,16 +153,18 @@ def botMain (b):
     print "yes"
     print "the python marine id is", me
     you = findYou (b)
-    b.change_weapon (1)
-    print "changed to 1"
-    time.sleep (2)
+
+    # b.change_weapon (1)
+    # print "changed to 1"
+    # time.sleep (2)
 
     while True:
+        test_crouch_jump (b)
         # moveTowards (you)
         # b.face (you)
-        print "Health is: " + str(b.get_health ())
-        b.start_firing ()
-        print "Reloading weapon", b.reload_weapon ()
+        # print "Health is: " + str(b.get_health ())
+        # b.start_firing ()
+        # print "Reloading weapon", b.reload_weapon ()
         # time.sleep (1)
 
 

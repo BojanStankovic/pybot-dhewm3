@@ -190,6 +190,14 @@ class cache:
     def stepvec (self, velforward, velright, dist):
         self.delpos (self.me ())
         return self._basic.stepvec (velforward, velright, dist)
+    
+    #
+    #  stepup - makes the bot jump or crouch
+    #
+
+    def stepup (self, velup, dist):
+        self.delpos (self.me ())
+        return self._basic.stepup (velup, dist)
 
     #
     #  sync - wait for any event to occur.
