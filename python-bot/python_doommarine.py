@@ -8,21 +8,21 @@ import math
 debugTowards = False
 
 def walkSquare ():
-    b.forward (100, 100)
-    b.select (["move"])
-    b.left (100, 100)
-    b.select (["move"])
-    b.back (100, 100)
-    b.select (["move"])
-    b.right (100, 100)
-    b.select (["move"])
+    bot.forward (100, 100)
+    bot.select (["move"])
+    bot.left (100, 100)
+    bot.select (["move"])
+    bot.back (100, 100)
+    bot.select (["move"])
+    bot.right (100, 100)
+    bot.select (["move"])
 
 
 def runArc (angle):
-    b.forward (100, 100)
-    b.turn (angle, 1)
-    b.select (["move"])
-    b.select (["turn"])
+    bot.forward (100, 100)
+    bot.turn (angle, 1)
+    bot.select (["move"])
+    bot.select (["turn"])
 
 
 def circle (velocity, distance):
@@ -36,22 +36,22 @@ def circle (velocity, distance):
             # time.sleep (3)
 
 def testturn (a):
-    b.turn (a, 1)
-    b.select (["turn"])
+    bot.turn (a, 1)
+    bot.select (["turn"])
 
 def sqr (x):
     return x * x
 
 def calcDist (d0, d1):
-    p0 = b.d2pv (d0)
-    p1 = b.d2pv (d1)
+    p0 = bot.d2pv (d0)
+    p1 = bot.d2pv (d1)
     s = subVec (p0, p1)
     return math.sqrt (sqr (s[0]) + sqr (s[1]))
 
-def moveTowards (i):
-    b.reset ()
-    print "will go and find", i
-    print "I'm currently at", b.getpos (me), "and", i, "is at", b.getpos (i)
+def moveTowards (goalObj):
+    bot.reset ()
+    print "will go and find", goalObj
+    print "I'm currently at", bot.getpos (me), "and", goalObj, "is at", bot.getpos (goalObj)
     """
     if not equVec (b.d2pv (b.getpos (me)), [12, 9]):
         print "failed to find getpos at 12, 9 for python"
@@ -59,33 +59,33 @@ def moveTowards (i):
         print "failed to find getpos at 40, 3 for player"
     """
     if debugTowards:
-        print "bot is at", b.d2pv (b.getpos (me))
-        print "you are at", b.d2pv (b.getpos (you))
-    d = b.calcnav (i)
+        print "bot is at", bot.d2pv (bot.getpos (me))
+        print "you are at", bot.d2pv (bot.getpos (you))
+    distance = bot.calcnav (goalObj)
     if debugTowards:
-        print "object", i, "is", d, "units away"
-    if d is None:
+        print "object", goalObj, "is", distance, "units away"
+    if distance is None:
         if debugTowards:
-            print "cannot reach", i
-        b.turn (90, 1)
-        b.select (["turn"])
-        b.forward (100, 100)
-        b.select (["move"])
+            print "cannot reach", goalObj
+        bot.turn (90, 1)
+        bot.select (["turn"])
+        bot.forward (100, 100)
+        bot.select (["move"])
     else:
         if debugTowards:
-            print "distance according to dijkstra is", d
-        b.journey (100, d, i)
+            print "distance according to dijkstra is", distance
+        bot.journey (100, distance, goalObj)
         if debugTowards:
-            print "finished my journey to", i
-            print "  result is that I'm currently at", b.getpos (me), "and", i, "is at", b.getpos (i)
-            print "      penguin tower coords I'm at", b.d2pv (b.getpos (me)), "and", i, "is at", b.d2pv (b.getpos (i))
+            print "finished my journey to", goalObj
+            print "  result is that I'm currently at", bot.getpos (me), "and", goalObj, "is at", bot.getpos (goalObj)
+            print "      penguin tower coords I'm at", bot.d2pv (bot.getpos (me)), "and", goalObj, "is at", bot.d2pv (bot.getpos (goalObj))
 
 
 def findAll ():
-    for i in b.allobj ():
-        print "the location of python bot", me, "is", b.getpos (me)
+    for i in bot.allobj ():
+        print "the location of python bot", me, "is", bot.getpos (me)
         if i != me:
-            b.aim (i)
+            bot.aim (i)
             moveTowards (i)
             time.sleep (5)
 
@@ -121,6 +121,7 @@ def clock (b):
         b.reset ()
 
 
+# START TESTS
 def test_crouch_jump (b):
     b.reset ()
     b.stepup (-2, 3*12)
@@ -128,6 +129,17 @@ def test_crouch_jump (b):
     time.sleep (2)
     b.stepup (100, 4*12)
     b.select (['move'])
+
+def pick_medkit ():
+    print "Entity = ", bot.getEntityPos()
+    for obj in bot.allobj ():
+        print "Object: ", obj
+    # medkit = 
+    # distance = bot.calcnav (medkit)
+    # bot.journey (100, distance, medkit)
+
+
+# END TESTS
 
 
 doommarine = -2
@@ -157,6 +169,7 @@ def botMain (b):
     # b.change_weapon (1)
     # print "changed to 1"
     # time.sleep (2)
+    pick_medkit ()
 
     while True:
         test_crouch_jump (b)
@@ -172,5 +185,5 @@ def botMain (b):
 if len (sys.argv) > 1:
     doommarine = int (sys.argv[1])
 
-b = botlib.bot ("localhost", "python_doommarine %d" % (doommarine))
-execBot (b, False)
+bot = botlib.bot ("localhost", "python_doommarine %d" % (doommarine))
+execBot (bot, False)

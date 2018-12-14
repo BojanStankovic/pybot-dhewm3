@@ -57,30 +57,30 @@ class basic:
     def __init__ (self, server, name):
         global superServer
         while True:
-            self.s = self.connectSS (server)
+            self.socket = self.connectSS (server)
             #
             #  firstly we need to double check the superServer is on this port
             #  as a quick rerun of the game might have forced a different portno.
             #  The bot server will also know the superServer port and will tell us
             #  the port of the superServer.
             #
-            self.s.send ('super\n')
+            self.socket.send ('super\n')
             p = int (self.getPort ())
             print superServer, p
             if p == superServer:
                 print "successfully double checked the superserver port"
-                self.s.close ()             #  all done with that connection,
+                self.socket.close ()             #  all done with that connection,
                 #  we reconnect and go for the real bot request.
-                self.s = self.connectSS (server)
+                self.socket = self.connectSS (server)
                 #
                 #  all good, we now ask it about the botserver portno
                 #
                 print "sending botname request to superserver", name
-                self.s.send (name + '\n')   #  specific botserver requested
+                self.socket.send (name + '\n')   #  specific botserver requested
                 print "waiting for port reply from superserver", name
                 p = int (self.getPort ())
                 print "about to close this socket", name
-                self.s.close ()             #  all done with the superServer
+                self.socket.close ()             #  all done with the superServer
                 if p != 0:
                     print "found botname", name, "port is", p
                     break                   #  found the portno
@@ -90,29 +90,28 @@ class basic:
                 #
                 time.sleep (1)
             else:
-                self.s.close ()             #  all done with this server
+                self.socket.close ()             #  all done with this server
                 superServer = p             #  superServer has moved portno
                 print "superserver has changed port to", p
-        self.s = self.connectBot (server, p, name)
+        self.socket = self.connectBot (server, p, name)
         self._maxX = None
         self._maxY = None
 
 
     #
     #  connectSS - connects to the superserver
-    #
+    #              It returns a socket on success.
 
     def connectSS (self, server):
         global superServer
         print "bot trying to connect to the superserver on port", superServer
-        i = 0
         while True:
             for j in range (10):
-                success, s = self.tryConnectSS (server, superServer+j)
+                success, superServerSocket = self.tryConnectSS (server, superServer+j)
                 if success:
                     superServer = superServer+j
                     print "bot connected to superserver on port", superServer
-                    return s
+                    return superServerSocket
             sys.stdout.write (".")
             sys.stdout.flush ()
             time.sleep (2)
@@ -124,9 +123,9 @@ class basic:
 
     def tryConnectSS (self, server, port):
         try:
-            s = socket (AF_INET, SOCK_STREAM)
-            s.connect ((server, port))
-            return True, s
+            superServerSocket = socket (AF_INET, SOCK_STREAM)
+            superServerSocket.connect ((server, port))
+            return True, superServerSocket
         except:
             return False, None
 
@@ -142,34 +141,34 @@ class basic:
     #
 
     def getLine (self):
-        l = ""
+        line = ""
         while True:
-            c = self.s.recv (1)
-            if c == '\n':
+            character = self.socket.recv (1)
+            if character == '\n':
                 break
-            l += c
+            line += character
         if debug_protocol:
-            print "<socket has sent>", l
-        return l
+            print "<socket has sent>", line
+        return line
 
     #
     #  connectBot - connects to the bot server
+    #               returns the bot socket
     #
 
     def connectBot (self, server, port, name):
-        s = socket (AF_INET, SOCK_STREAM)
+        botSocket = socket (AF_INET, SOCK_STREAM)
         print "python bot trying to connect to the bot server", port, name
-        i = 0
         while True:
             try:
-                s.connect ((server, port))
+                botSocket.connect ((server, port))
                 break
             except:
                 print ".",
                 sys.stdout.flush ()
                 time.sleep (1)
         print "bot connected to bot server"
-        return s
+        return botSocket
 
     #
     #  line2vec - in:   a string of three numbers space separated.
@@ -196,7 +195,7 @@ class basic:
         l = "getpos %d\n" % (obj)
         if debug_protocol:
             print "getpos command:", l
-        self.s.send (l)
+        self.socket.send (l)
         return self.line2vec (self.getLine ())
 
 
@@ -205,7 +204,7 @@ class basic:
     #
 
     def me (self):
-        self.s.send ("self\n")
+        self.socket.send ("self\n")
         return int (self.getLine ())
 
 
@@ -214,7 +213,7 @@ class basic:
     #
 
     def health (self):
-        self.s.send ("health\n")
+        self.socket.send ("health\n")
         return int (self.getLine ())
 
     #
@@ -222,7 +221,7 @@ class basic:
     #
 
     def angle (self):
-        self.s.send ("angle\n")
+        self.socket.send ("angle\n")
         return int (self.getLine ())
 
 
@@ -232,7 +231,7 @@ class basic:
     #
 
     def maxobj (self):
-        self.s.send ("maxobj\n")
+        self.socket.send ("maxobj\n")
         return int (self.getLine ())
 
 
@@ -242,7 +241,7 @@ class basic:
 
     def objectname (self, d):
         l = "objectname %d\n" % (d)
-        self.s.send (l)
+        self.socket.send (l)
         return self.getLine ()
 
 
@@ -274,7 +273,7 @@ class basic:
         l = "right %d %d\n" % (v, d)
         if debug_protocol:
             print "requesting a right step", v, d
-        self.s.send (l)
+        self.socket.send (l)
         l = self.getLine ()
         if debug_protocol:
             print "doom returned", l
@@ -290,7 +289,7 @@ class basic:
         l = "forward %d %d\n" % (v, d)
         if debug_protocol:
             print "requesting a forward step", v, d
-        self.s.send (l)
+        self.socket.send (l)
         l = self.getLine ()
         if debug_protocol:
             print "doom returned", l
@@ -324,7 +323,7 @@ class basic:
         l = "stepvec %d %d %d\n" % (f, r, d)
         if debug_protocol:
             print "requesting a forward step", f, r, d
-        self.s.send (l)
+        self.socket.send (l)
         l = self.getLine ()
         if debug_protocol:
             print "doom returned", l
@@ -338,7 +337,7 @@ class basic:
         l = "step_up %d %d\n" % (velocity, dist)
         if debug_protocol:
             print "requesting a", l
-        self.s.send (l)
+        self.socket.send (l)
         l = self.getLine ()
         if debug_protocol:
             print "doom returned", l
@@ -353,7 +352,7 @@ class basic:
     def sync (self):
         if debug_protocol:
             print "requesting sync"
-        self.s.send ("select any\n")
+        self.socket.send ("select any\n")
         l = self.getLine ()
         if debug_protocol:
             print "doom returned", l
@@ -378,7 +377,7 @@ class basic:
             else:
                 printf ("incorrect parameter to select (%s)\n", w)
         l = "select %d\n" % (b)
-        self.s.send (l)
+        self.socket.send (l)
         l = self.getLine ()
         if debug_protocol:
             print "doom returned", l
@@ -393,7 +392,7 @@ class basic:
     def start_firing (self):
         if debug_protocol:
             print "requesting to fire weapon"
-        self.s.send ("start_firing\n")
+        self.socket.send ("start_firing\n")
         l = self.getLine ()
         if debug_protocol:
             print "doom returned", l
@@ -408,7 +407,7 @@ class basic:
     def stop_firing (self):
         if debug_protocol:
             print "requesting to stop firing weapon"
-        self.s.send ("stop_firing\n")
+        self.socket.send ("stop_firing\n")
         l = self.getLine ()
         if debug_protocol:
             print "doom returned", l
@@ -423,7 +422,7 @@ class basic:
     def reload_weapon (self):
         if debug_protocol:
             print "requesting to reload weapon"
-        self.s.send ("reload_weapon\n")
+        self.socket.send ("reload_weapon\n")
         l = self.getLine ()
         if debug_protocol:
             print "doom returned", l
@@ -444,7 +443,7 @@ class basic:
         if debug_protocol:
             print "requesting change weapon to", weapon
         string = "change_weapon %d\n" % (weapon)
-        self.s.send (string)
+        self.socket.send (string)
         line = self.getLine ()
         if debug_protocol:
             print "doom returned", line
@@ -459,7 +458,7 @@ class basic:
         if debug_protocol:
             print "get me current helth"
         string = "health\n"
-        self.s.send (string)
+        self.socket.send (string)
         line = self.getLine ()
         if debug_protocol:
             print "health returned", line
@@ -474,7 +473,7 @@ class basic:
     def ammo (self):
         if debug_protocol:
             print "requesting ammo"
-        self.s.send ("ammo\n")
+        self.socket.send ("ammo\n")
         l = self.getLine ()
         if debug_protocol:
             print "doom returned", l
@@ -488,7 +487,7 @@ class basic:
         if debug_protocol:
             print "requesting aim at", i
         l = "aim %d\n" % (i)
-        self.s.send (l)
+        self.socket.send (l)
         l = self.getLine ()
         if debug_protocol:
             print "doom returned", l
@@ -502,7 +501,7 @@ class basic:
         if debug_turn:
             print "requesting turn ", angle, angle_vel
         l = "turn %d %d\n" % (angle, angle_vel)
-        self.s.send (l)
+        self.socket.send (l)
         l = self.getLine ()
         if debug_turn:
             print "old angle of bot", l
@@ -515,7 +514,7 @@ class basic:
     def getPenMapName (self):
         if debug_protocol:
             print "requesting penmap"
-        self.s.send ("penmap\n")
+        self.socket.send ("penmap\n")
         l = self.getLine ()
         if debug_protocol:
             print "doom returned", l
@@ -530,7 +529,7 @@ class basic:
         if debug_protocol:
             print "requesting getclassnameentity"
         l = "get_class_name_entity %s\n" % (name)
-        self.s.send (l)
+        self.socket.send (l)
         l = self.getLine ()
         if debug_protocol:
             print "doom returned", l
@@ -545,7 +544,7 @@ class basic:
         if debug_protocol:
             print "requesting get_pair_name_entity", left, right
         l = "get_pair_name_entity %s %s\n" % (left, right)
-        self.s.send (l)
+        self.socket.send (l)
         l = self.getLine ()
         if debug_protocol:
             print "doom returned", l
@@ -566,7 +565,7 @@ class basic:
         if debug_protocol:
             print "requesting get_entity_pos", i
         l = "get_entity_pos %d\n" % (i)
-        self.s.send (l)
+        self.socket.send (l)
         l = self.getLine ()
         if debug_protocol:
             print "doom returned", l

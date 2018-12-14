@@ -4,6 +4,7 @@ Implemented so far:
 - (2) health updating
 - (1) auto lights - change this a bit
 - (2) reloading a weapon
+- (2) jumping and crouching
 
 
 
@@ -15,9 +16,20 @@ Observations:
 
 
 TODO:
-- refactor and comment the methods I touched (especially the lights)
-- reference the introduce lights to Gaius' github as a starting point
-- get the bot find the aid pack and pick it up
-- fix the beams
-- jump/crouch
-- refactot if statements to a switch statement in "void pyBotClass::interpretRemoteProcedureCall (char *data)" in pybot.cpp
+- (1&2) refactor and comment the methods I touched (especially the lights)
+
+- (1) reference the "introduce lights" to Gaius' github as a starting point
+      and refactor heavily. Also:
+	- command line flag to choose the type of lights
+	- make heavy changes
+
+- (1) fix the beams. Also:
+	- enable/disable beams from command line
+	- 
+
+- (2) get the bot find the aid pack and pick it up
+	- write about getting a medkit from a list of available medkits
+	  or only getting a single one. Problem of determining the closest
+	  medkit if there are multiple on the map
+	- this is too difficult to do, can't figure out how to get the medkit
+	  location, or list of spawned medkits
