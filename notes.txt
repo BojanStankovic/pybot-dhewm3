@@ -3,6 +3,7 @@ Implemented so far:
 - (2) firing
 - (2) health updating
 - (1) auto lights - maybe change this a bit
+- (2) reloading a weapon
 
 
 

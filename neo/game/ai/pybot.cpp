@@ -51,11 +51,11 @@ Author:  Gaius Mulley  <gaius@gnu.org>
 #include "gamesys/SysCmds.h"
 #include "script/Script_Thread.h"
 
-#include "ai/AI.h"
+#include "game/ai/AI.h"
 #include "anim/Anim_Testmodel.h"
 #include "Camera.h"
 #include "SmokeParticles.h"
-#include "Player.h"
+#include "game/Player.h"
 #include "WorldSpawn.h"
 #include "Misc.h"
 #include "Trigger.h"
@@ -131,7 +131,7 @@ class item
   int weapon (int new_weapon);
   int health (void);
   int angle (void);
-  void reload_weapon (void);
+  int reload_weapon (void);
   bool aim (idEntity *enemy);
   int turn (int angle, int angle_vel);
   idEntity *getIdEntity (void);
@@ -447,9 +447,19 @@ int item::angle (void)
  *  reload_weapon
  */
 
-void item::reload_weapon (void)
+int item::reload_weapon (void)
 {
-
+  switch (kind)
+    {
+    case item_monster:
+      assert (false);
+      return 0;  // ignore
+      break;
+    case item_player:
+      return idplayer->reload_weapon ();
+    }
+  assert (false);
+  return 0;
 }
 
 
@@ -728,6 +738,18 @@ int dict::turn (int id, int angle, int angle_vel)
 int dict::weapon (int id, int new_weapon)
 {
   return entry[id]->weapon (new_weapon);
+}
+
+
+/*
+ *  reload_weapon - reload the current weapon and return the
+ *                  ammo available for the current weapon.
+ */
+
+
+int dict::reload_weapon (int id)
+{
+  return entry[id]->reload_weapon ();
 }
 
 
@@ -2110,7 +2132,7 @@ void pyBotClass::rpcReloadWeapon (void)
     gameLocal.Printf ("rpcReloadWeapon call by python\n");
 
   if (rpcId > 0)
-    ammo = dictionary->ammo (rpcId);   // --fixme-- this should call something else
+    ammo = dictionary->reload_weapon (rpcId);
   else
     ammo = 0;
 

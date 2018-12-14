@@ -18,9 +18,9 @@ def walkSquare ():
     b.select (["move"])
 
 
-def runArc (a):
+def runArc (angle):
     b.forward (100, 100)
-    b.turn (a, 1)
+    b.turn (angle, 1)
     b.select (["move"])
     b.select (["turn"])
 
@@ -136,6 +136,7 @@ def execBot (b, useExceptions = True):
 
 def botMain (b):
     global me
+    global you
     print "success!  python doom marine is alive"
 
     print "trying to get my id...",
@@ -143,29 +144,17 @@ def botMain (b):
     print "yes"
     print "the python marine id is", me
     you = findYou (b)
+    b.change_weapon (1)
+    print "changed to 1"
+    time.sleep (2)
 
     while True:
-        moveTowards (you)
-        b.face (you)
-        print b.get_health ()
-        # b.change_weapon (3)
-        # print "changed to 3"
-        # time.sleep (2)
-        # b.start_firing ()
-        # time.sleep (2)
-        # print "fired"
-        # b.change_weapon (0)
-        # time.sleep (10)
-        # b.change_weapon (1)
-        # print "changed to 1"
-        # b.start_firing ()
-        # print "fired"
-        # time.sleep (10)
-        # b.change_weapon (3)
-        # time.sleep (2)
-        # b.stop_firing ()
-        # print "stopped firing"
-        time.sleep (1)
+        # moveTowards (you)
+        # b.face (you)
+        print "Health is: " + str(b.get_health ())
+        b.start_firing ()
+        print "Reloading weapon", b.reload_weapon ()
+        # time.sleep (1)
 
 
 

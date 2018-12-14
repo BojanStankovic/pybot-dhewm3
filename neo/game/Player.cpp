@@ -6792,6 +6792,26 @@ int idPlayer::ChangeWeapon (int new_weapon)
 
 
 /*
+===============
+idPlayer::reload_weapon
+===============
+*/
+int idPlayer::reload_weapon (void) {
+  if ( gameLocal.isClient ) {
+    return -1;
+  }
+  if ( spectating || gameLocal.inCinematic || influenceActive ) {
+    return -1;
+  }
+  if ( weapon.GetEntity() && weapon.GetEntity()->IsLinked() ) {
+    weapon.GetEntity()->Reload ();
+    return inventory.ammo[currentWeapon];
+  }
+  return -1;
+}
+
+
+/*
 ==============
 idPlayer::Ammo  (gaius)
 ==============

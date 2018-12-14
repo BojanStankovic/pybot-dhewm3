@@ -199,6 +199,16 @@ class bot:
 
     def stop_firing (self):
         return self._cache.stop_firing ()
+    
+    #
+    #  reload_weapon - reload the current weapon
+    #                  It returns the amount of ammo left.
+    #
+
+
+    def reload_weapon (self):
+        return self._cache.reload_weapon ()
+
 
     #
     #  sync - wait for any event to occur.
@@ -376,8 +386,8 @@ class bot:
         self.reset ()
 
 
-    def calcMidDist (dest):
-        botpos = self.getpos (self.me ())  # doom3 units
+    def calcMidDist (self, dest):
+        return self.getpos (self.me ())  # doom3 units
 
 
     def runArc (self, angle, dist):

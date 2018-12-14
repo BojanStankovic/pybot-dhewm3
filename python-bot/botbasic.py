@@ -171,7 +171,6 @@ class basic:
         print "bot connected to bot server"
         return s
 
-
     #
     #  line2vec - in:   a string of three numbers space separated.
     #             out:  returns a list of three integers.
@@ -404,11 +403,11 @@ class basic:
 
 
     #
-    #  reloadWeapon - reload the current weapon
-    #                 It returns the amount of ammo left.
+    #  reload_weapon - reload the current weapon
+    #                  It returns the amount of ammo left.
     #
 
-    def reloadWeapon (self):
+    def reload_weapon (self):
         if debug_protocol:
             print "requesting to reload weapon"
         self.s.send ("reload_weapon\n")
@@ -445,7 +444,7 @@ class basic:
 
     def get_health (self):
         if debug_protocol:
-            print "get me current helth", weapon
+            print "get me current helth"
         string = "health\n"
         self.s.send (string)
         line = self.getLine ()
