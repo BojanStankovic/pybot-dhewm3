@@ -121,27 +121,6 @@ def clock (b):
         b.reset ()
 
 
-# START TESTS
-def test_crouch_jump (b):
-    b.reset ()
-    b.stepup (-2, 3*12)
-    b.select (['move'])
-    time.sleep (2)
-    b.stepup (100, 4*12)
-    b.select (['move'])
-
-def pick_medkit ():
-    print "Entity = ", bot.getEntityPos()
-    for obj in bot.allobj ():
-        print "Object: ", obj
-    # medkit = 
-    # distance = bot.calcnav (medkit)
-    # bot.journey (100, distance, medkit)
-
-
-# END TESTS
-
-
 doommarine = -2
 
 def execBot (b, useExceptions = True):
@@ -169,16 +148,48 @@ def botMain (b):
     # b.change_weapon (1)
     # print "changed to 1"
     # time.sleep (2)
-    pick_medkit ()
 
     while True:
-        test_crouch_jump (b)
+        # Testing the jump/crouch method
+        # b.reset ()
+        # b.stepup (-2, 3*12)
+        # print "Bot crouched"
+        # b.select (['move'])
+        # time.sleep (2)
+        # b.stepup (100, 4*12)
+        # print "Bot jumped"
+        # b.select (['move'])
+
+        # Testing the health
         # moveTowards (you)
         # b.face (you)
         # print "Health is: " + str(b.get_health ())
+        # time.sleep (1)
+
+        # Fire and reload weapon actions - works
+        # b.start_firing ()
+        # time.sleep (1)
+        # print "Reloading weapon", b.reload_weapon ()
+        # time.sleep (1)
+
+        # Fire and reload weapon actions - reload doesn't occure because firing animation is not finished
         # b.start_firing ()
         # print "Reloading weapon", b.reload_weapon ()
         # time.sleep (1)
+
+        # Testing changing weapons
+        b.change_weapon(0)
+        print "Weapon changed to: ", 0
+        time.sleep(1)
+        b.change_weapon(1)
+        print "Weapon changed to: ", 1
+        time.sleep(1)
+        b.change_weapon(2)
+        print "Weapon changed to: ", 2
+        time.sleep(1)
+        b.change_weapon(3)
+        print "Weapon changed to: ", 3
+        time.sleep(1)
 
 
 

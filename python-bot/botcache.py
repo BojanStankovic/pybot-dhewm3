@@ -233,7 +233,6 @@ class cache:
     #
 
     def stop_firing (self):
-        self.delammo ()
         return self._basic.stop_firing ()
 
     #
